@@ -93,11 +93,7 @@ export default function Payment() {
         </p>
       </div> */}
       <div>
-        <PaymentElement
-          options={{
-            wallets: { applePay: "never", googlePay: "never" },
-          }}
-        />
+        <PaymentElement />
         <button
           className="bg-black text-white font-bold text-center p-4 rounded mt-4 w-full disabled:opacity-50"
           disabled={loading}
