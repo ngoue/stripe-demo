@@ -40,7 +40,7 @@ export default function Payment() {
       return;
     }
 
-    const { error } = await stripe.confirmPayment({
+    const { error } = await stripe.confirmSetup({
       elements,
       confirmParams: {
         return_url: "/",
@@ -76,7 +76,7 @@ export default function Payment() {
 
   return (
     <div className="flex flex-col gap-4">
-      <ExpressCheckoutElement
+      {/* <ExpressCheckoutElement
         onConfirm={handleExpressConfirm}
         options={{
           paymentMethodOrder: ["applePay", "googlePay", "link"],
@@ -91,7 +91,7 @@ export default function Payment() {
         <p className="text-gray-400 absolute bg-white p-2">
           Or pay another way
         </p>
-      </div>
+      </div> */}
       <div>
         <PaymentElement
           options={{
