@@ -17,36 +17,37 @@ const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "";
 const stripePromise = loadStripe(stripeKey);
 
 export default function Payment() {
+  const [complete, setComplete] = useState(false);
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
 
-  const handleExpressConfirm = async (
-    event: StripeExpressCheckoutElementConfirmEvent
-  ) => {
-    if (!stripe || !elements) {
-      console.warn(">>> stripe not loaded... exiting.");
-      return;
-    }
+  // const handleExpressConfirm = async (
+  //   event: StripeExpressCheckoutElementConfirmEvent
+  // ) => {
+  //   if (!stripe || !elements) {
+  //     console.warn(">>> stripe not loaded... exiting.");
+  //     return;
+  //   }
 
-    debugger;
-    console.log(">>> handleExpressConfirm()");
-    console.log({ event });
+  //   debugger;
+  //   console.log(">>> handleExpressConfirm()");
+  //   console.log({ event });
 
-    const { error: submitError } = await elements.submit();
-    if (submitError) {
-      console.error(">>> error submitting... exiting.");
-      console.error({ submitError });
-      return;
-    }
+  //   const { error: submitError } = await elements.submit();
+  //   if (submitError) {
+  //     console.error(">>> error submitting... exiting.");
+  //     console.error({ submitError });
+  //     return;
+  //   }
 
-    const { error } = await stripe.confirmSetup({
-      elements,
-      confirmParams: {
-        return_url: "/",
-      },
-    });
-  };
+  //   const { error } = await stripe.confirmSetup({
+  //     elements,
+  //     confirmParams: {
+  //       return_url: "/",
+  //     },
+  //   });
+  // };
 
   const handlePayment = async () => {
     if (!stripe || !elements) {
@@ -55,24 +56,35 @@ export default function Payment() {
     }
 
     setLoading(true);
-    console.log(">>> handlePayment()");
-    debugger;
+
     const { error: submitError } = await elements.submit();
+
     if (submitError) {
       console.error(">>> error submitting... exiting.");
       console.error({ submitError });
       setLoading(false);
       return;
     }
-    setLoading(false);
 
-    const { error } = await stripe.confirmPayment({
+    const { error: confirmError } = await stripe.confirmPayment({
       elements,
-      confirmParams: {
-        return_url: "/",
-      },
+      redirect: "if_required",
     });
+
+    if (confirmError) {
+      console.error(">>> error confirming... exiting.");
+      console.error({ confirmError });
+      setLoading(false);
+      return;
+    }
+
+    setComplete(true);
+    setLoading(false);
   };
+
+  if (complete) {
+    return <h1>Thank you</h1>;
+  }
 
   return (
     <div className="flex flex-col gap-4">
