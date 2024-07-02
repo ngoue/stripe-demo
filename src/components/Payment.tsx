@@ -22,32 +22,11 @@ export default function Payment() {
   const stripe = useStripe();
   const elements = useElements();
 
-  // const handleExpressConfirm = async (
-  //   event: StripeExpressCheckoutElementConfirmEvent
-  // ) => {
-  //   if (!stripe || !elements) {
-  //     console.warn(">>> stripe not loaded... exiting.");
-  //     return;
-  //   }
-
-  //   debugger;
-  //   console.log(">>> handleExpressConfirm()");
-  //   console.log({ event });
-
-  //   const { error: submitError } = await elements.submit();
-  //   if (submitError) {
-  //     console.error(">>> error submitting... exiting.");
-  //     console.error({ submitError });
-  //     return;
-  //   }
-
-  //   const { error } = await stripe.confirmSetup({
-  //     elements,
-  //     confirmParams: {
-  //       return_url: "/",
-  //     },
-  //   });
-  // };
+  const handleExpressConfirm = async (
+    event: StripeExpressCheckoutElementConfirmEvent
+  ) => {
+    handlePayment();
+  };
 
   const handlePayment = async () => {
     if (!stripe || !elements) {
@@ -88,7 +67,7 @@ export default function Payment() {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* <ExpressCheckoutElement
+      <ExpressCheckoutElement
         onConfirm={handleExpressConfirm}
         options={{
           paymentMethodOrder: ["applePay", "googlePay", "link"],
@@ -103,7 +82,7 @@ export default function Payment() {
         <p className="text-gray-400 absolute bg-white p-2">
           Or pay another way
         </p>
-      </div> */}
+      </div>
       <div>
         <PaymentElement />
         <button
